@@ -1,8 +1,12 @@
 module.exports = [
     {
-        name: 'Paulo Macasaet',
-        math: 'A',
-        science: 'A',
-        english: 'B+'
+        course: 'CS 129.18',
+        letter_grade: 'A',
+        units: 3
+    },
+    {
+        course: 'MIS 141',
+        letter_grade: 'B+',
+        units: 3
     }
 ];
