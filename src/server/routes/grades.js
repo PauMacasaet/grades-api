@@ -1,8 +1,44 @@
 const Router = require('koa-router');
+// const fs = require('fs');
+// const FB = require('fb');
+// const Twitter = require('twitter');
+
 const queries = require('../db/queries/grades');
+// const { FBConfig, TwitterConfig, accessToken, pageID } = require('../config');
+
+// const fb = new FB.Facebook(FBConfig);
+// const T = new Twitter(TwitterConfig);
+
+// FB.setAccessToken(accessToken);
 
 const router = new Router();
 const BASE_URL = `/api/v1/grades`;
+
+const uploadTweetMedia = async (err, media, ctx) => {
+    try {
+        console.log(media)
+
+        const status = await {
+            status: ctx.body.status,
+            media_ids: media.media_id_string
+        }
+
+        await T.post('statuses/update', status)
+        ctx.status = 200
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const uploadFBMedia = async (err, ctx) => {
+    try {
+        console.log('post success')
+        ctx.status = 200
+
+    } catch (err) {
+        console.error(err)
+    }
+}
 
 router.get(BASE_URL, async (ctx) => {
     try {
@@ -12,10 +48,8 @@ router.get(BASE_URL, async (ctx) => {
             status: 'success',
             data: grades
         };
-
-        console.log('Getting all grades')
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 })
 
@@ -28,8 +62,6 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
                 status: 'success',
                 data: grade
             };
-
-            console.log('Getting all grades by id')
         } else {
             ctx.status = 404;
 
@@ -39,7 +71,7 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
             };
         }
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 })
 
@@ -48,14 +80,13 @@ router.post(`${BASE_URL}`, async (ctx) => {
         const grade = await queries.addSubject(ctx.request.body);
 
         if (grade.length) {
-            ctx.status = 201;
+            ctx.status = 200;
 
             ctx.body = {
                 status: 'success',
                 data: grade
             };
-
-            console.log('Added subject')
+            // await T.post('statuses/update', { status: grade })
         } else {
             ctx.status = 400;
 
@@ -85,8 +116,6 @@ router.put(`${BASE_URL}/:id`, async (ctx) => {
                 status: 'success',
                 data: grade
             };
-
-            console.log('Updated subject')
         } else {
             ctx.status = 404;
 

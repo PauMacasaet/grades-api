@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
+const logger = require('koa-logger');
 
 const indexRoutes = require('./routes/index');
 const gradeRoutes = require('./routes/grades');
@@ -8,6 +9,7 @@ const app = new Koa();
 const PORT = process.env.PORT || 8888;
 
 app.use(bodyParser());
+app.use(logger())
 app.use(indexRoutes.routes());
 app.use(gradeRoutes.routes());
 
